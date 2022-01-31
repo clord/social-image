@@ -1,3 +1,4 @@
 /target
+/cache
 .cargo-ok
 .DS_Store
