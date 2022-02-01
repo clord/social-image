@@ -4,13 +4,6 @@ use sha2::{Digest, Sha256};
 pub struct FileId(String);
 
 impl FileId {
-    pub fn from_contents(source: &[u8]) -> FileId {
-        let mut hasher = Sha256::new();
-        hasher.update(source);
-        let hash_bytes = hasher.finalize();
-        FileId(bs58::encode(hash_bytes).into_string())
-    }
-
     pub fn new(source: &[u8]) -> FileId {
         let mut rng = rand::thread_rng();
 
