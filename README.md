@@ -1,7 +1,6 @@
 # social-image
 
 [![Crates.io](https://img.shields.io/crates/v/social-image.svg)](https://crates.io/crates/social-image)
-[![Docs.rs](https://docs.rs/social-image/badge.svg)](https://docs.rs/social-image)
 [![CI](https://github.com/clord/social-image/workflows/CI/badge.svg)](https://github.com/clord/social-image/actions)
 [![Coverage Status](https://coveralls.io/repos/github/clord/social-image/badge.svg?branch=main)](https://coveralls.io/github/clord/social-image?branch=main)
 
@@ -11,15 +10,15 @@
 
 * Install the rust toolchain in order to have cargo installed by following
   [this](https://www.rust-lang.org/tools/install) guide.
-* run `cargo install social-image`
+* Run `cargo install social-image`
 
 ## License
 
 Licensed under either of
 
- * Apache License, Version 2.0
+* Apache License, Version 2.0
    ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license
+* MIT license
    ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
 at your option.
