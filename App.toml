@@ -1,0 +1,4 @@
+[default]
+port = 8000
+ident = "social-image-srv"
+expire_png_secs = 260000

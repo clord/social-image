@@ -8,13 +8,13 @@ impl FileId {
         let mut rng = rand::thread_rng();
 
         let mut hasher = Sha256::new();
-        for _ in 0..4 {
-            hasher.update(rng.gen::<[u8; 8]>())
-        }
 
+        // Pull in 32 bytes of random values
+        hasher.update(rng.gen::<[u8; 32]>());
+        // and also pull source file contents
         hasher.update(source);
-        let hash_bytes = hasher.finalize();
 
+        let hash_bytes = hasher.finalize();
         FileId(bs58::encode(hash_bytes).into_string())
     }
 

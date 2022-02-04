@@ -10,11 +10,18 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 bs58 = "0.4.0"
+filetime = "0.2.15"
 rand = "0.8.4"
 resvg = "0.20.0"
 rocket = "0.5.0-rc.1"
+serde = { version = "1.0", features = ["derive"] }
 sha2 = "0.10.1"
 tiny-skia = "0.6.3"
+tokio = "1.16.1"
 tracing = "0.1.29"
 tracing-futures = "0.2.5"
 usvg = "0.20.0"
+figment = { version = "0.10", features = ["env", "toml", "json"] }
+walkdir = "2.3.2"
+color-eyre = "0.6.0"
+eyre = "0.6.6"
