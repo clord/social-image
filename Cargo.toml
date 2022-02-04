@@ -1,6 +1,6 @@
 [package]
 name = "social-image"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Generate social images using SVG templates"
 repository = "https://github.com/clord/social-image"
