@@ -1,4 +1,9 @@
 use crate::identifier::FileId;
+use color_eyre::Result;
+use figment::{
+    providers::{Env, Format, Serialized, Toml},
+    Figment, Profile,
+};
 use filetime::FileTime;
 use rocket::fairing::AdHoc;
 use rocket::fs::NamedFile;
@@ -7,11 +12,6 @@ use rocket::response::Redirect;
 use rocket::serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use walkdir::WalkDir;
-use color_eyre::Result;
-use figment::{
-    providers::{Env, Format, Serialized, Toml},
-    Figment, Profile,
-};
 
 #[macro_use]
 extern crate rocket;
@@ -209,7 +209,12 @@ fn rocket() -> _ {
         .mount("/", routes![index])
         .mount(
             "/images",
-            routes![get_image_file, create_file_with_png, delete_file, update_file],
+            routes![
+                get_image_file,
+                create_file_with_png,
+                delete_file,
+                update_file
+            ],
         )
         .attach(AdHoc::config::<AppConfig>())
 }
