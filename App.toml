@@ -1,4 +1,9 @@
 [default]
 port = 8000
 ident = "social-image-srv"
+
+[production]
 expire_png_secs = 260000
+store = "/"
+address = "0.0.0.0"
+
