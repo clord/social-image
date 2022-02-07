@@ -16,6 +16,7 @@ use walkdir::WalkDir;
 #[macro_use]
 extern crate rocket;
 
+mod apikey;
 mod identifier;
 mod render;
 
@@ -46,7 +47,6 @@ fn index() -> &'static str {
 #[get("/<filename..>")]
 async fn get_image_file(filename: PathBuf) -> std::result::Result<NamedFile, Status> {
     let mut png_path = std::path::PathBuf::new();
-    png_path.push("data");
     png_path.push(filename);
     png_path.push("img");
     let mut svg_path = png_path.clone();
@@ -74,10 +74,12 @@ async fn get_image_file(filename: PathBuf) -> std::result::Result<NamedFile, Sta
 }
 
 #[post("/", format = "image/svg+xml", data = "<file>")]
-async fn create_file_with_png(file: Vec<u8>) -> std::result::Result<Redirect, Status> {
+async fn create_file_with_png(
+    file: Vec<u8>,
+    _api_key: apikey::ApiKey<'_>,
+) -> std::result::Result<Redirect, Status> {
     let id = FileId::new(&file);
     let mut png_path = std::path::PathBuf::new();
-    png_path.push("data");
     png_path.push(id.dir());
     png_path.push(id.name());
     if let Err(e) = std::fs::create_dir_all(&png_path) {
@@ -99,9 +101,8 @@ async fn create_file_with_png(file: Vec<u8>) -> std::result::Result<Redirect, St
 }
 
 #[delete("/<filename..>")]
-async fn delete_file(filename: PathBuf) -> &'static str {
+async fn delete_file(filename: PathBuf, _api_key: apikey::ApiKey<'_>) -> &'static str {
     let mut png_path = std::path::PathBuf::new();
-    png_path.push("data");
     png_path.push(filename);
 
     match std::fs::remove_dir(png_path) {
@@ -118,9 +119,9 @@ async fn update_file(
     path: PathBuf,
     filename: PathBuf,
     file: Vec<u8>,
+    _api_key: apikey::ApiKey<'_>,
 ) -> std::result::Result<Redirect, Status> {
     let mut png_path = std::path::PathBuf::new();
-    png_path.push("data");
     png_path.push(&path);
     png_path.push(&filename);
 
@@ -190,6 +191,8 @@ fn rocket() -> _ {
     let config: AppConfig = rocket.figment().extract().expect("config");
     let expire = config.expire_png_secs;
     let store = config.store.clone();
+
+    info!("Using {store:?} as store");
     std::env::set_current_dir(config.store).unwrap();
 
     tokio::spawn(async move {
