@@ -56,7 +56,7 @@ async fn get_image_file(filename: PathBuf) -> std::result::Result<NamedFile, Sta
     if png_path.is_file() {
         NamedFile::open(&png_path)
             .await
-            .map_err(|_| Status::InternalServerError)
+            .map_err(|_| Status::NotFound)
     } else {
         match std::fs::read(svg_path) {
             Err(e) => {

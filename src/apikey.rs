@@ -1,7 +1,6 @@
+use crate::AppConfig;
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
-use rocket::serde::Deserialize;
-use rocket::Config;
 
 pub struct ApiKey<'r>(&'r str);
 
@@ -10,11 +9,6 @@ pub enum ApiKeyError {
     Missing,
     Invalid,
     Failure,
-}
-
-#[derive(Deserialize)]
-struct AppConfig {
-    key: String,
 }
 
 /// true if `key` is a valid API key string.
@@ -27,15 +21,19 @@ impl<'r> FromRequest<'r> for ApiKey<'r> {
     type Error = ApiKeyError;
 
     async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
-        match Config::figment().extract::<AppConfig>() {
-            Ok(app_config) => match req.headers().get_one("x-api-key") {
+        let app_key = req
+            .rocket()
+            .state::<AppConfig>()
+            .map(|my_config| &my_config.key);
+        match app_key {
+            Some(api_key) => match req.headers().get_one("x-api-key") {
                 None => Outcome::Failure((Status::BadRequest, ApiKeyError::Missing)),
-                Some(key) if is_valid(&app_config.key, key) => Outcome::Success(ApiKey(key)),
+                Some(key) if is_valid(api_key, key) => Outcome::Success(ApiKey(key)),
                 Some(_) => Outcome::Failure((Status::BadRequest, ApiKeyError::Invalid)),
             },
-            Err(e) => {
-                error!("Failed to get config: {e:?}");
-                Outcome::Failure((Status::InternalServerError, ApiKeyError::Failure))
+            None => {
+                error!("Failed to get config");
+                Outcome::Failure((Status::BadRequest, ApiKeyError::Failure))
             }
         }
     }
