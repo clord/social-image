@@ -2,7 +2,6 @@
 
 [![Crates.io](https://img.shields.io/crates/v/social-image.svg)](https://crates.io/crates/social-image)
 [![CI](https://github.com/clord/social-image/workflows/CI/badge.svg)](https://github.com/clord/social-image/actions)
-[![Coverage Status](https://coveralls.io/repos/github/clord/social-image/badge.svg?branch=main)](https://coveralls.io/github/clord/social-image?branch=main)
 
 ## Installation
 
