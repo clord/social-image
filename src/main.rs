@@ -88,6 +88,13 @@ async fn create_file_with_png(
     }
 
     png_path.push("img");
+    let mut svg_path = png_path.clone();
+    svg_path.set_extension("svg");
+    if let Err(e) = std::fs::write(svg_path, &file) {
+        error!("Failed to write svg file: {e:?}");
+        return Err(Status::InternalServerError);
+    }
+
     png_path.set_extension("png");
     match render::svg_to_png(&file, &png_path) {
         Ok(()) => {
