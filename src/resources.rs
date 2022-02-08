@@ -1,4 +1,3 @@
-
 use crate::identifier::FileId;
 
 pub fn get_resource_path(tmp_path: &std::path::Path) -> eyre::Result<()> {
