@@ -7,9 +7,11 @@ use figment::{
 use filetime::FileTime;
 use rocket::fairing::AdHoc;
 use rocket::fs::NamedFile;
+use rocket::fs::TempFile;
 use rocket::http::Status;
 use rocket::response::Redirect;
 use rocket::serde::{Deserialize, Serialize};
+use rocket::Request;
 use std::path::PathBuf;
 use walkdir::WalkDir;
 
@@ -19,6 +21,7 @@ extern crate rocket;
 mod apikey;
 mod identifier;
 mod render;
+mod resources;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -30,13 +33,16 @@ fn index() -> &'static str {
         -> this help content
 
      GET /images/<name>
-        -> load the image with correct etag caching set. Use accept header to change type
+        -> load the image. if not cached, will create cached copy. 
 
      PUT /images/<name>
-        -> Put a new svg on top of an existing filename
+        -> Put a new svg on top of an existing filename. resets cache for <name>.
 
      POST /images
-        -> POST new svg to images, get redirected to image if valid or error (creates new)
+        -> POST new svg to images, get redirected to image if valid or error (creates new) (does not cache)
+
+     POST /images/<name>/resource/<resource>
+        -> POST relevant files that the SVG will need to render (e.g., referred PNGs) (invalidates <name>)
 
      DELETE /images/<name>
         -> Remove the image from the system
@@ -73,6 +79,42 @@ async fn get_image_file(filename: PathBuf) -> std::result::Result<NamedFile, Sta
     }
 }
 
+/// Some SVG files require additional resources in order to render correctly.
+/// you can post resources and they will become available on the next render (as <name>).
+#[post("/<dir>/<filename>/resource/<name>", data = "<file>")]
+async fn attach_resource(
+    dir: &str,
+    filename: &str,
+    name: &str,
+    mut file: TempFile<'_>,
+    _api_key: apikey::ApiKey<'_>,
+) -> std::result::Result<Redirect, Status> {
+    let mut path = std::path::PathBuf::new();
+    path.push(dir);
+    path.push(filename);
+
+    if !path.is_dir() {
+        return Err(Status::NotFound);
+    }
+
+    let mut png_path = path.clone();
+
+    path.push(format!("{name}.tmp"));
+    file.persist_to(&path).await.expect("persist to work");
+
+    png_path.push("img");
+    png_path.set_extension("png");
+    std::fs::remove_file(png_path).unwrap_or(());
+
+    match resources::get_resource_path(&path) {
+        Ok(()) => Ok(Redirect::to(format!("/images/{dir}/{filename}"))),
+        Err(e) => {
+            error!("Failed to persist resource: {e:?}");
+            Err(Status::InternalServerError)
+        }
+    }
+}
+
 #[post("/", format = "image/svg+xml", data = "<file>")]
 async fn create_file_with_png(
     file: Vec<u8>,
@@ -95,24 +137,17 @@ async fn create_file_with_png(
         return Err(Status::InternalServerError);
     }
 
-    png_path.set_extension("png");
-    match render::svg_to_png(&file, &png_path) {
-        Ok(()) => {
-            let dir = id.dir();
-            let name = id.name();
-            let res = Redirect::to(format!("/images/{dir}/{name}"));
-            Ok(res)
-        }
-        Err(e) => Err(e),
-    }
+    let dir = id.dir();
+    let name = id.name();
+    Ok(Redirect::to(format!("/images/{dir}/{name}")))
 }
 
 #[delete("/<filename..>")]
 async fn delete_file(filename: PathBuf, _api_key: apikey::ApiKey<'_>) -> &'static str {
-    let mut png_path = std::path::PathBuf::new();
-    png_path.push(filename);
+    let mut image_dir = std::path::PathBuf::new();
+    image_dir.push(filename);
 
-    match std::fs::remove_dir(png_path) {
+    match std::fs::remove_dir(image_dir) {
         Ok(_) => "Ok",
         Err(e) => {
             error!("while removing file: {e:?}");
@@ -123,9 +158,9 @@ async fn delete_file(filename: PathBuf, _api_key: apikey::ApiKey<'_>) -> &'stati
 
 #[put("/<path>/<filename>", format = "image/svg+xml", data = "<file>")]
 async fn update_file(
-    path: PathBuf,
-    filename: PathBuf,
-    file: Vec<u8>,
+    path: &str,
+    filename: &str,
+    mut file: TempFile<'_>,
     _api_key: apikey::ApiKey<'_>,
 ) -> std::result::Result<Redirect, Status> {
     let mut png_path = std::path::PathBuf::new();
@@ -138,15 +173,17 @@ async fn update_file(
     }
 
     png_path.push("img");
+    let mut svg_file = png_path.clone();
+    svg_file.set_extension("svg");
     png_path.set_extension("png");
-    match render::svg_to_png(&file, &png_path) {
-        Ok(()) => {
-            let path = path.to_string_lossy();
-            let filename = filename.to_string_lossy();
-            let res = Redirect::to(format!("/images/{path}/{filename}"));
-            Ok(res)
+    std::fs::remove_file(png_path).unwrap_or(());
+
+    match file.persist_to(&svg_file).await {
+        Ok(()) => Ok(Redirect::to(format!("/images/{path}/{filename}"))),
+        Err(e) => {
+            error!("Failed to persist resource: {e:?}");
+            Err(Status::InternalServerError)
         }
-        Err(e) => Err(e),
     }
 }
 
@@ -171,17 +208,34 @@ fn trim_expired_files(store: &std::path::Path, expire: i64) -> Result<()> {
     for entry in WalkDir::new(&store) {
         let entry = entry?;
         let path = entry.path();
-        if let Some(ext) = path.extension() {
-            if ext == "png" {
-                let metadata = std::fs::metadata(path)?;
-                let mtime = FileTime::from_last_modification_time(&metadata);
-                if FileTime::now().seconds() > (mtime.seconds() + expire) {
-                    std::fs::remove_file(path)?;
+        if let Some(name) = path.file_name() {
+            if let Some(ext) = path.extension() {
+                if name == "img" && ext == "png" {
+                    let metadata = std::fs::metadata(path)?;
+                    let mtime = FileTime::from_last_modification_time(&metadata);
+                    if FileTime::now().seconds() > (mtime.seconds() + expire) {
+                        std::fs::remove_file(path)?;
+                    }
                 }
             }
         }
     }
     Ok(())
+}
+
+#[catch(500)]
+fn internal_error() -> &'static str {
+    "{\"error\": \"internal_error\"}"
+}
+
+#[catch(404)]
+fn not_found(_req: &Request) -> &'static str {
+    "{\"error\": \"not_found\"}"
+}
+
+#[catch(default)]
+fn default(status: Status, _req: &Request) -> String {
+    format!("{{\"status\": \"{status}\"}}")
 }
 
 #[launch]
@@ -222,9 +276,11 @@ fn rocket() -> _ {
             routes![
                 get_image_file,
                 create_file_with_png,
+                attach_resource,
                 delete_file,
                 update_file
             ],
         )
+        .register("/", catchers![internal_error, not_found, default])
         .attach(AdHoc::config::<AppConfig>())
 }

@@ -5,6 +5,7 @@ use usvg::{FitTo, Options, Size, Tree};
 pub fn svg_to_png(file: &[u8], png_path: &std::path::Path) -> std::result::Result<(), Status> {
     let mut opt = Options::default();
     opt.fontdb.load_system_fonts();
+    opt.resources_dir = png_path.parent().map(|x| x.to_owned());
 
     if let Some(size) = Size::new(1080f64, 566f64) {
         opt.default_size = size;
