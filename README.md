@@ -1,5 +1,8 @@
 # social-image
 
+[![Crates.io](https://img.shields.io/crates/v/social-image.svg)](https://crates.io/crates/social-image)
+[![CI](https://github.com/clord/social-image/workflows/CI/badge.svg)](https://github.com/clord/social-image/actions)
+
 Post SVGs and then request renderings in other formats (currently only PNG)
 
 This is a very small helper tool that renders SVG to PNG,
@@ -16,9 +19,6 @@ Updating the SVG or any of its resources will trigger an update to the PNG.
 - `POST /images` -> POST new svg to images, get redirected to image if valid or error (creates new) (does not cache)
 - `POST /images/<name>/resource/<resource>` -> POST relevant files that the SVG will need to render (e.g., referred PNGs) (invalidates <name>)
 - `DELETE /images/<name>` -> Remove the image from the system
-
-[![Crates.io](https://img.shields.io/crates/v/social-image.svg)](https://crates.io/crates/social-image)
-[![CI](https://github.com/clord/social-image/workflows/CI/badge.svg)](https://github.com/clord/social-image/actions)
 
 ## Installation
 
