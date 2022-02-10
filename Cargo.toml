@@ -12,6 +12,7 @@ filetime = "0.2.15"
 rand = "0.8.4"
 resvg = { version = "0.20.0", features = ["text"] }
 rocket = "0.5.0-rc.1"
+rocket_prometheus = "0.10.0-rc.1"
 serde = { version = "1.0", features = ["derive"] }
 sha2 = "0.10.1"
 tiny-skia = "0.6.3"
