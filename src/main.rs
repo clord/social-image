@@ -249,6 +249,8 @@ fn rocket() -> _ {
 
     let rocket = rocket::custom(figment);
 
+    let prometheus = rocket_prometheus::PrometheusMetrics::new();
+
     let config: AppConfig = rocket.figment().extract().expect("config");
     let expire = config.expire_png_secs;
     let store = config.store.clone();
@@ -281,6 +283,8 @@ fn rocket() -> _ {
                 update_file
             ],
         )
+        .mount("/metrics", prometheus.clone())
         .register("/", catchers![internal_error, not_found, default])
+        .attach(prometheus)
         .attach(AdHoc::config::<AppConfig>())
 }
