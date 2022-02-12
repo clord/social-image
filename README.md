@@ -13,12 +13,8 @@ Updating the SVG or any of its resources will trigger an update to the PNG.
 
 ## Usage
 
-- `GET /` -> this help content
-- `GET /images/<name>` -> load the image. if not cached, will create cached copy.
-- `PUT /images/<name>` -> Put a new svg on top of an existing filename. resets cache for <name>.
-- `POST /images` -> POST new svg to images, get redirected to image if valid or error (creates new) (does not cache)
-- `POST /images/<name>/resource/<resource>` -> POST relevant files that the SVG will need to render (e.g., referred PNGs) (invalidates <name>)
-- `DELETE /images/<name>` -> Remove the image from the system
+- `GET /` → help content
+- `POST /images` → POST SVG for render (see help content above for instructions)
 
 ## Installation
 
