@@ -8,10 +8,9 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 bs58 = "0.4.0"
-filetime = "0.2.15"
 rand = "0.8.4"
 resvg = { version = "0.20.0", features = ["text"] }
-rocket = "0.5.0-rc.1"
+rocket = { version = "0.5.0-rc.1", features = ["json"] }
 rocket_prometheus = "0.10.0-rc.1"
 serde = { version = "1.0", features = ["derive"] }
 sha2 = "0.10.1"
@@ -21,6 +20,5 @@ tracing = "0.1.30"
 tracing-futures = "0.2.5"
 usvg = "0.20.0"
 figment = { version = "0.10", features = ["env", "toml", "json"] }
-walkdir = "2.3.2"
 color-eyre = "0.6.0"
 eyre = "0.6.6"
