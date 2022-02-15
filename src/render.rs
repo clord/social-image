@@ -6,7 +6,7 @@ use tiny_skia::{Pixmap, Transform};
 use usvg::{FitTo, Options, Size, Tree};
 
 /// Given a full svg description, produce an encoded png
-pub async fn png_from_svg<'a>(mut contents: SvgDescription<'a>) -> Result<Vec<u8>> {
+pub async fn png_from_svg(mut contents: SvgDescription<'_>) -> Result<Vec<u8>> {
     let space = RenderSpace::new(env::current_dir()?)?;
 
     // Lay out svg resources for rendering purposes
