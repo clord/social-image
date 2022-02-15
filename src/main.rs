@@ -20,22 +20,23 @@ use rocket::{
 extern crate rocket;
 
 mod apikey;
-mod render;
 mod index;
+mod render;
 #[cfg(test)]
 mod tests;
 mod types;
-
 
 #[post("/image", format = "multipart/form-data", data = "<svg_form>")]
 async fn render_svg(
     svg_form: Form<SvgDescription<'_>>,
     _api_key: apikey::ApiKey<'_>,
 ) -> result::Result<(ContentType, Vec<u8>), Status> {
-    let result = render::png_from_svg(svg_form.into_inner()).await.map_err(|e| {
-        error!("Error while rendering: {e:?}");
-        Status::InternalServerError
-    })?;
+    let result = render::png_from_svg(svg_form.into_inner())
+        .await
+        .map_err(|e| {
+            error!("Error while rendering: {e:?}");
+            Status::InternalServerError
+        })?;
     Ok((ContentType::PNG, result))
 }
 

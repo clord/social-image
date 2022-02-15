@@ -1,5 +1,5 @@
 use super::rocket;
-use rocket::http::{ContentType,Status};
+use rocket::http::{ContentType, Status};
 use rocket::local::blocking::Client;
 
 #[test]
@@ -13,17 +13,21 @@ fn tests() {
     );
 
     assert_eq!(
-        client.post("/image")
-         .header(ContentType::new("multipart", "form-data"))
-        .dispatch().status(),
+        client
+            .post("/image")
+            .header(ContentType::new("multipart", "form-data"))
+            .dispatch()
+            .status(),
         Status::BadRequest
     );
 
     assert_eq!(
-        client.post("/image")
-         .header(ContentType::new("multipart", "form-data"))
-         .header(ContentType::new("x-api-key", "XO"))
-        .dispatch().status(),
+        client
+            .post("/image")
+            .header(ContentType::new("multipart", "form-data"))
+            .header(ContentType::new("x-api-key", "XO"))
+            .dispatch()
+            .status(),
         Status::BadRequest
     );
 
