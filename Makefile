@@ -1,5 +1,10 @@
 
 # Publish the image
 publish:
-	docker buildx build --platform=linux/amd64,linux/arm64  -t clord/social-image:latest --push .
+	echo $$(git describe --dirty --tags --long --always)
+	docker buildx build \
+		--platform=linux/amd64,linux/arm64 \
+		--tag clord/social-image:latest \
+		--tag clord/social-image:$$(git describe --dirty --tags --long --always)  \
+		--push .
 
