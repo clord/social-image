@@ -85,7 +85,8 @@ fn rocket() -> _ {
 
     let config: AppConfig = rocket.figment().extract().expect("config");
 
-    env::set_current_dir(config.temp_path).expect("Failed to set PWD to temp_path. check config.");
+    std::fs::create_dir_all(&config.temp_path).expect("failed to create temp_path directories");
+    env::set_current_dir(config.temp_path).expect("failed to set PWD to temp_path. check config");
 
     rocket
         .mount("/", routes![index::index, render_svg])
