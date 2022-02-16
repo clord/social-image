@@ -31,7 +31,7 @@ pub fn index() -> (ContentType, &'static str) {
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 prose"><p>This help content</p></dd>
                     </div>
                     <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt class="font-medium text-gray-500"><code>POST /images</code></dt>
+                        <dt class="font-medium text-gray-500"><code>POST /image</code></dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 prose">
                             <p>Post a SVG and it's resources in a supported format, and response body will contain the PNG.</p>
                             <p>Submit files as <code>multipart/form-data</code>. The <code>svg</code> field contains the main svg to render, 
