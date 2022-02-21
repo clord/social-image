@@ -13,7 +13,7 @@ resvg = { version = "0.21.0", features = ["text"] }
 rocket = { version = "0.5.0-rc.1", features = ["json"] }
 rocket_prometheus = "0.10.0-rc.1"
 serde = { version = "1.0", features = ["derive"] }
-sha2 = "0.10.1"
+sha2 = "0.10.2"
 tiny-skia = "0.6.3"
 tokio = "1.16.1"
 tracing = "0.1.30"
