@@ -495,6 +495,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "fontdb"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "122fa73a5566372f9df09768a16e8e3dad7ad18abe07835f1f0b71f84078ba4c"
+dependencies = [
+ "fontconfig-parser",
+ "log",
+ "memmap2",
+ "ttf-parser 0.15.0",
+]
+
+[[package]]
 name = "futures"
 version = "0.3.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1238,7 +1250,7 @@ dependencies = [
  "svgfilters",
  "svgtypes",
  "tiny-skia",
- "usvg",
+ "usvg 0.21.0",
 ]
 
 [[package]]
@@ -1383,6 +1395,22 @@ dependencies = [
  "bytemuck",
  "smallvec",
  "ttf-parser 0.12.3",
+ "unicode-bidi-mirroring",
+ "unicode-ccc",
+ "unicode-general-category",
+ "unicode-script",
+]
+
+[[package]]
+name = "rustybuzz"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "25ff94f20221325d000e552781713e53b0d85c1d9551b6f420d12daf5a08eace"
+dependencies = [
+ "bitflags",
+ "bytemuck",
+ "smallvec",
+ "ttf-parser 0.15.0",
  "unicode-bidi-mirroring",
  "unicode-ccc",
  "unicode-general-category",
@@ -1553,7 +1581,7 @@ dependencies = [
  "tracing-futures",
  "tracing-log",
  "tracing-subscriber",
- "usvg",
+ "usvg 0.22.0",
  "uuid",
  "yansi",
 ]
@@ -1958,6 +1986,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4ccbe8381883510b6a2d8f1e32905bddd178c11caef8083086d0c0c9ab0ac281"
 
 [[package]]
+name = "ttf-parser"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c74c96594835e10fa545e2a51e8709f30b173a092bfd6036ef2cec53376244f3"
+
+[[package]]
 name = "typenum"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2034,17 +2068,43 @@ dependencies = [
  "data-url",
  "flate2",
  "float-cmp",
- "fontdb",
+ "fontdb 0.8.0",
  "kurbo",
  "log",
  "pico-args",
  "rctree",
  "roxmltree",
- "rustybuzz",
+ "rustybuzz 0.4.0",
  "simplecss",
  "siphasher",
  "svgtypes",
  "ttf-parser 0.14.0",
+ "unicode-bidi",
+ "unicode-script",
+ "unicode-vo",
+]
+
+[[package]]
+name = "usvg"
+version = "0.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a261d60a7215fa339482047cc3dafd4e22e2bf34396aaebef2b707355bbb39c0"
+dependencies = [
+ "base64",
+ "data-url",
+ "flate2",
+ "float-cmp",
+ "fontdb 0.9.1",
+ "kurbo",
+ "log",
+ "pico-args",
+ "rctree",
+ "roxmltree",
+ "rustybuzz 0.5.0",
+ "simplecss",
+ "siphasher",
+ "svgtypes",
+ "ttf-parser 0.15.0",
  "unicode-bidi",
  "unicode-script",
  "unicode-vo",
