@@ -21,6 +21,7 @@ extern crate rocket;
 
 mod apikey;
 mod index;
+mod instrumentation;
 mod render;
 #[cfg(test)]
 mod tests;
@@ -79,6 +80,8 @@ fn rocket() -> _ {
         .merge(Env::prefixed("APP_").global())
         .select(Profile::from_env_or("APP_PROFILE", "default"));
 
+    instrumentation::init_logging();
+
     let rocket = rocket::custom(figment);
 
     let prometheus = rocket_prometheus::PrometheusMetrics::new();
@@ -93,5 +96,6 @@ fn rocket() -> _ {
         .mount("/metrics", prometheus.clone())
         .register("/", catchers![internal_error, not_found, default])
         .attach(prometheus)
+        .attach(instrumentation::TracingFairing)
         .attach(AdHoc::config::<AppConfig>())
 }
