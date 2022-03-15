@@ -1,6 +1,6 @@
 [package]
 name = "social-image"
-version = "0.5.0"
+version = "0.5.1"
 edition = "2021"
 description = "Generate social images using SVG templates"
 repository = "https://github.com/clord/social-image"
@@ -16,7 +16,7 @@ serde = { version = "1.0", features = ["derive"] }
 sha2 = "0.10.2"
 tiny-skia = "0.6.3"
 tokio = "1.17.0"
-tracing = "0.1.31"
+tracing = "0.1.32"
 tracing-futures = "0.2.5"
 usvg = "0.22.0"
 figment = { version = "0.10", features = ["env", "toml", "json"] }
