@@ -16,24 +16,36 @@ Updating the SVG or any of its resources will trigger an update to the PNG.
 - `GET /` → help content
 - `POST /images` → POST SVG for render (see help content above for instructions)
 
+## Environment Variables
+
+- `APP_ADDRESS` IP address to serve on (default 127.0.0.1)
+- `APP_CLI_COLORS` Whether to use colors and emoji when logging. (default true)
+- `APP_IDENT` If and how to identify via the Server header.
+- `APP_KEEP_ALIVE` Keep-alive timeout seconds; disabled when 0.(default 5)
+- `APP_KEY` is the secret required to use API
+- `APP_LOG_LEVEL` one of `critical`, `support`, `normal`, `debug`, `off`
+  (default `critical`)
+- `APP_PORT` Port to serve on (default 8000)
+- `APP_TEMP_PATH` is path to where work temporary files will be kept. (default /tmp)
+- `APP_WORKERS` Number of threads to use (default CPU core count)
+
 ## Installation
 
 ### Cargo
 
-* Install the rust toolchain in order to have cargo installed by following
+- Install the rust toolchain in order to have cargo installed by following
   [this](https://www.rust-lang.org/tools/install) guide.
-* Run `cargo install social-image`
+- Run `cargo install social-image`
 
 ## License
 
-Licensed under either of
+At your option licensed under either of
 
-* Apache License, Version 2.0
+- Apache License, Version 2.0
    ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
-* MIT license
+- MIT license
    ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
 
-at your option.
 
 ## Contribution
 
