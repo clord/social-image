@@ -1,14 +1,16 @@
 use super::rocket;
 use rocket::http::{ContentType, Status};
-use rocket::local::blocking::Client;
+use rocket::local::asynchronous::Client;
 
-#[test]
-fn tests() {
+#[async_test]
+async fn tests() {
     std::env::set_var("APP_KEY", "XO");
-    let client = Client::tracked(rocket()).expect("valid rocket instance");
-    assert_eq!(client.get("/").dispatch().status(), Status::Ok);
+    let client = Client::tracked(rocket().await)
+        .await
+        .expect("valid rocket instance");
+    assert_eq!(client.get("/").dispatch().await.status(), Status::Ok);
     assert_eq!(
-        client.get("/not-found").dispatch().status(),
+        client.get("/not-found").dispatch().await.status(),
         Status::NotFound
     );
 
@@ -17,6 +19,7 @@ fn tests() {
             .post("/image")
             .header(ContentType::new("multipart", "form-data"))
             .dispatch()
+            .await
             .status(),
         Status::BadRequest
     );
@@ -27,6 +30,7 @@ fn tests() {
             .header(ContentType::new("multipart", "form-data"))
             .header(ContentType::new("x-api-key", "XO"))
             .dispatch()
+            .await
             .status(),
         Status::BadRequest
     );
