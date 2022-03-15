@@ -17,7 +17,6 @@ use rocket::{
     Request,
 };
 
-
 #[macro_use]
 extern crate rocket;
 
