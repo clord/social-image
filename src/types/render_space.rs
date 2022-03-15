@@ -21,6 +21,8 @@ impl RenderSpace {
         path.push(&name[0..2]);
         path.push(&name[2..3]);
         path.push(&name[3..]);
+        // purposefully using std::fs::create_dir_all instead of tokio::fs
+        // because of the drop
         fs::create_dir_all(&path)?;
         info!("Rendering in {:?}", &path);
         Ok(RenderSpace(path))
@@ -42,6 +44,7 @@ impl From<RenderSpace> for path::PathBuf {
 impl Drop for RenderSpace {
     fn drop(&mut self) {
         info!("Finished with render space {:?}", self.0);
+        // purposefully using std::fs::create_dir_all instead of tokio::fs
         fs::remove_dir_all(&self.0).unwrap();
     }
 }

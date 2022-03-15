@@ -1,8 +1,9 @@
 use crate::types::{RenderSpace, Result, SvgDescription};
 
 use eyre::eyre;
-use std::{env, fs, path};
+use std::{env, path};
 use tiny_skia::{Pixmap, Transform};
+use tokio::fs;
 use usvg::{FitTo, Options, Size, Tree};
 
 /// Given a full svg description, produce an encoded png
@@ -26,7 +27,7 @@ pub async fn png_from_svg(mut contents: SvgDescription<'_>) -> Result<Vec<u8>> {
 
     let svg_path = space.as_ref().join("main.svg");
     contents.svg.persist_to(&svg_path).await?;
-    let svg_contents = fs::read(&svg_path)?;
+    let svg_contents = fs::read(&svg_path).await?;
     let rtree = Tree::from_data(&svg_contents, &opt.to_ref())?;
     let pixmap_size = rtree.svg_node().size.to_screen_size();
 

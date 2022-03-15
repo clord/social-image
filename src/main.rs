@@ -4,6 +4,7 @@ use figment::{
     Figment, Profile,
 };
 use std::{env, path, result};
+use tokio::fs;
 
 use rocket::{
     fairing::AdHoc,
@@ -15,6 +16,7 @@ use rocket::{
     },
     Request,
 };
+
 
 #[macro_use]
 extern crate rocket;
@@ -72,7 +74,7 @@ fn default(status: Status, _req: &Request) -> Value {
 }
 
 #[launch]
-fn rocket() -> _ {
+async fn rocket() -> _ {
     color_eyre::install().unwrap();
     let figment = Figment::from(rocket::Config::default())
         .merge(Serialized::defaults(AppConfig::default()))
@@ -88,7 +90,9 @@ fn rocket() -> _ {
 
     let config: AppConfig = rocket.figment().extract().expect("config");
 
-    std::fs::create_dir_all(&config.temp_path).expect("failed to create temp_path directories");
+    fs::create_dir_all(&config.temp_path)
+        .await
+        .expect("failed to create temp_path directories");
     env::set_current_dir(config.temp_path).expect("failed to set PWD to temp_path. check config");
 
     rocket
