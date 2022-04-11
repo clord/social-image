@@ -21,7 +21,7 @@ tracing-futures = "0.2.5"
 usvg = "0.22.0"
 figment = { version = "0.10", features = ["env", "toml", "json"] }
 color-eyre = "0.6.1"
-eyre = "0.6.7"
+eyre = "0.6.8"
 tracing-subscriber = { version = "0.3.9", features = ["json" ,"env-filter"] }
 yansi = "0.5.0"
 tracing-log = "0.1.2"
