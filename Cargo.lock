@@ -1738,9 +1738,9 @@ checksum = "42657b1a6f4d817cda8e7a0ace261fe0cc946cf3a80314390b22cc61ae080792"
 
 [[package]]
 name = "tiny-skia"
-version = "0.6.3"
+version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1bcfd4339bdd4545eabed74b208f2f1555f2e6540fb58135c01f46c0940aa138"
+checksum = "6f5ac9783610677139de05b2b438cf46d13ae3260721ad77f9f72d4f324bcbf7"
 dependencies = [
  "arrayref",
  "arrayvec 0.5.2",
