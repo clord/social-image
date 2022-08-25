@@ -18,7 +18,7 @@ tiny-skia = "0.7.0"
 tokio = "1.19.2"
 tracing = "0.1.34"
 tracing-futures = "0.2.5"
-usvg = "0.22.0"
+usvg = "0.23.0"
 figment = { version = "0.10", features = ["env", "toml", "json"] }
 color-eyre = "0.6.2"
 eyre = "0.6.8"
