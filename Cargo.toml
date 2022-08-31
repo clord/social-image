@@ -14,7 +14,7 @@ rocket = { version = "0.5.0-rc.2", features = ["json"] }
 rocket_prometheus = "0.10.0-rc.3"
 serde = { version = "1.0", features = ["derive"] }
 sha2 = "0.10.2"
-tiny-skia = "0.7.0"
+tiny-skia = "0.8.1"
 tokio = "1.19.2"
 tracing = "0.1.36"
 tracing-futures = "0.2.5"
