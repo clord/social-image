@@ -1601,7 +1601,7 @@ dependencies = [
  "rocket_prometheus",
  "serde",
  "sha2",
- "tiny-skia 0.8.1",
+ "tiny-skia 0.8.2",
  "tokio",
  "tracing",
  "tracing-futures",
@@ -1765,9 +1765,9 @@ dependencies = [
 
 [[package]]
 name = "tiny-skia"
-version = "0.8.1"
+version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b45377d0852ab3ac6e974c034c9be94a564634efea23b2c1a6c9233e54977190"
+checksum = "0ae12c22601b6853f4d93abb178e13bf0e1cc8e2454100c85d4d3a59ac71b3f7"
 dependencies = [
  "arrayref",
  "arrayvec 0.7.2",
@@ -1779,9 +1779,9 @@ dependencies = [
 
 [[package]]
 name = "tiny-skia-path"
-version = "0.8.1"
+version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6bd45bc1f409853359bba18c76c4ff06fc40bc3ad853ad07ee8bee8ba839179c"
+checksum = "bd665853ce64402daabef6edda442dbb4f8ee93ea80957b66ba1af419f11a104"
 dependencies = [
  "arrayref",
  "bytemuck",
