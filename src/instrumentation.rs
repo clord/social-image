@@ -34,7 +34,7 @@ impl<'r> FromRequest<'r> for RequestId {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, ()> {
-        match &*request.local_cache(|| RequestId::<Option<String>>(None)) {
+        match request.local_cache(|| RequestId::<Option<String>>(None)) {
             RequestId(Some(request_id)) => Outcome::Success(RequestId(request_id.to_owned())),
             RequestId(None) => Outcome::Failure((Status::InternalServerError, ())),
         }
@@ -105,7 +105,7 @@ impl<'r> FromRequest<'r> for TracingSpan {
     type Error = ();
 
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, ()> {
-        match &*request.local_cache(|| TracingSpan::<Option<Span>>(None)) {
+        match request.local_cache(|| TracingSpan::<Option<Span>>(None)) {
             TracingSpan(Some(span)) => Outcome::Success(TracingSpan(span.to_owned())),
             TracingSpan(None) => Outcome::Failure((Status::InternalServerError, ())),
         }
@@ -185,14 +185,14 @@ enum LogLevel {
 
 impl From<&str> for LogLevel {
     fn from(s: &str) -> Self {
-        return match &*s.to_ascii_lowercase() {
+        match &*s.to_ascii_lowercase() {
             "critical" => LogLevel::Critical,
             "support" => LogLevel::Support,
             "normal" => LogLevel::Normal,
             "debug" => LogLevel::Debug,
             "off" => LogLevel::Off,
             _ => panic!("a log level (off, debug, normal, support, critical)"),
-        };
+        }
     }
 }
 

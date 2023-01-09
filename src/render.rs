@@ -4,7 +4,7 @@ use eyre::eyre;
 use std::{env, path};
 use tiny_skia::{Pixmap, Transform};
 use tokio::fs;
-use usvg::{FitTo, Options, Size, Tree, TextRendering};
+use usvg::{FitTo, Options, Size, Tree};
 
 /// Given a full svg description, produce an encoded png
 pub async fn png_from_svg(mut contents: SvgDescription<'_>) -> Result<Vec<u8>> {
@@ -16,9 +16,10 @@ pub async fn png_from_svg(mut contents: SvgDescription<'_>) -> Result<Vec<u8>> {
         contents.persist_to(res_path).await?;
     }
 
-    let mut opt = Options::default();
-    opt.text_rendering = TextRendering::OptimizeLegibility;
-    opt.resources_dir = Some(path::PathBuf::from(space.as_ref()));
+    let mut opt = Options {
+        resources_dir: Some(path::PathBuf::from(space.as_ref())),
+        ..Options::default()
+    };
 
     if let Some(size) = Size::new(1080f64, 566f64) {
         opt.default_size = size;
