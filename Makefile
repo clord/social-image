@@ -1,4 +1,8 @@
 
+# Bump the version to latest
+bump:
+	ts-node ./scripts/bump
+
 # Publish the image
 publish:
 	echo $$(git describe --dirty --tags --long --always)
