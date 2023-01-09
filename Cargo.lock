@@ -1468,7 +1468,7 @@ checksum = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
 
 [[package]]
 name = "social-image"
-version = "0.5.3"
+version = "0.6.0"
 dependencies = [
  "bs58",
  "color-eyre",
