@@ -17,10 +17,12 @@ async function bump(cli: CLI) {
     await cli.prompt('1: make a branch for the release (e.g., bump-v0.6)');
     await cli.prompt('2: in branch, update Cargo.toml version (e.g., v0.6)');
     await cli.prompt(`3: in branch, update Cargo.lock by running: 
-         cargo build`);
-    await cli.prompt('4: commit changes, push up PR and get it to main');
-    await cli.prompt(`5: tag main with version (e.g., v0.6); and push it:
-         git push --tags`);
+        cargo build`);
+    await cli.prompt('4: commit changes, push up PR and merge it to origin/main');
+    await cli.prompt('5: switch local back to main and fetch from origin');
+    await cli.prompt(`6: tag main with version (e.g., v0.6); and push it:
+        git push --tags`);
+    cli.exec("make", ["publish"])
     cli.say('Updated!');
   } catch (e) {
     console.error(e);
