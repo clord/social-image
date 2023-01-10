@@ -1,4 +1,4 @@
-FROM rust:1.58.0-alpine as sibuilder
+FROM rust:1.66.0-alpine as sibuilder
 RUN apk add --no-cache musl-dev
 WORKDIR /opt
 RUN USER=root cargo new --bin social-image
